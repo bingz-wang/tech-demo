@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: springai-alibaba-demo
+  ai:
+    dashscope:
+      agent:
+        enabled: false
+      audio:
+        speech:
+          enabled: false
+        transcription:
+          enabled: false
+      chat:
+        enabled: false
+      embedding:
+        enabled: false
+      image:
+        enabled: false
+      rerank:
+        enabled: false
+      video:
+        enabled: false
+    model:
+      chat: none
+      embedding: none
+      image: none
+      rerank: none
+      video: none
+      audio:
+        speech: none
+        transcription: none
+      moderation: none
+
+server:
+  port: 8082
+
+logging:
+  level:
+    org.springframework.ai: info

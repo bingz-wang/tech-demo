@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: springai-demo
+  ai:
+    model:
+      audio:
+        speech: none
+        transcription: none
+      chat: none
+      embedding: none
+      image: none
+      moderation: none
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.ai: info

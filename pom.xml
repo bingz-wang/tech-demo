@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 技术演示项目父POM
+  ~ 包含多个子模块，用于演示Java各种技术特性
+  ~ - multithreading-demo: 多线程编程演示
+  ~ - design-patterns-demo: 设计模式演示
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 项目坐标信息 -->
+    <groupId>com.wbz</groupId>
+    <artifactId>tech-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!-- 打包类型为pom，表示这是一个父项目 -->
+    <packaging>pom</packaging>
+
+    <!-- 子模块列表 -->
+    <modules>
+        <!-- 多线程编程演示模块 -->
+        <module>multithreading-demo</module>
+        <!-- 设计模式演示模块 -->
+        <module>design-patterns-demo</module>
+        <module>springai-demo</module>
+        <module>springai-alibaba-demo</module>
+    </modules>
+
+    <!-- 项目属性配置 -->
+    <properties>
+        <!-- Java版本：25 -->
+        <java.version>25</java.version>
+        <!-- Maven编译源版本 -->
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <!-- Maven编译目标版本 -->
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <!-- 项目构建源编码：UTF-8 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+</project>
