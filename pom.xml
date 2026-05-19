@@ -25,6 +25,7 @@
         <module>design-patterns-demo</module>
         <module>springai-demo</module>
         <module>springai-alibaba-demo</module>
+        <module>other-demo</module>
     </modules>
 
     <!-- 项目属性配置 -->
