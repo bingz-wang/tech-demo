@@ -12,7 +12,7 @@
 
     <!-- 项目坐标信息 -->
     <groupId>com.wbz</groupId>
-    <artifactId>tech-demo</artifactId>
+    <artifactId>java-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <!-- 打包类型为pom，表示这是一个父项目 -->
     <packaging>pom</packaging>
