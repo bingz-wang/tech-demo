@@ -26,6 +26,7 @@
         <module>springai-demo</module>
         <module>springai-alibaba-demo</module>
         <module>other-demo</module>
+        <module>spring-security-demo</module>
     </modules>
 
     <!-- 项目属性配置 -->

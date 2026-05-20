@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: spring-security-demo
+
+  # 禁用 Thymeleaf（本 demo 纯 REST，不涉及模板引擎）
+  thymeleaf:
+    enabled: false
+
+# 日志级别 — 开启 Security 相关日志方便观察认证/授权过程
+logging:
+  level:
+    org.springframework.security: TRACE
+    com.wbz: DEBUG
