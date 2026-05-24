@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             targetNamespace="http://www.activiti.org/processdef">
+
+    <process id="leaveProcess" name="请假流程" isExecutable="true">
+
+        <startEvent id="start" name="开始"/>
+
+        <!-- 员工提交请假申请 -->
+        <userTask id="submitLeave" name="提交请假申请"
+                  flowable:assignee="${employee}"
+                  flowable:formFieldValidation="true"/>
+
+        <!-- 部门经理审批 -->
+        <userTask id="managerApprove" name="部门经理审批"
+                  flowable:assignee="${manager}"
+                  flowable:formFieldValidation="true"/>
+
+        <!-- 排他网关：请假 > 3 天需要 HR 审批 -->
+        <exclusiveGateway id="gateway" name="是否超过3天"/>
+
+        <!-- HR 审批（仅 > 3 天） -->
+        <userTask id="hrApprove" name="HR审批"
+                  flowable:assignee="${hr}"/>
+
+        <endEvent id="end" name="结束"/>
+
+        <!-- 连线 -->
+        <sequenceFlow id="flow1" sourceRef="start" targetRef="submitLeave"/>
+
+        <sequenceFlow id="flow2" sourceRef="submitLeave" targetRef="managerApprove"/>
+
+        <sequenceFlow id="flow3" sourceRef="managerApprove" targetRef="gateway"/>
+
+        <!-- 拒绝或 <= 3 天直接结束 -->
+        <sequenceFlow id="flow4" sourceRef="gateway" targetRef="end">
+            <conditionExpression xsi:type="tFormalExpression">
+                ${days <= 3 || managerApproved == false}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- > 3 天且经理通过 → HR 审批 -->
+        <sequenceFlow id="flow5" sourceRef="gateway" targetRef="hrApprove">
+            <conditionExpression xsi:type="tFormalExpression">
+                ${days > 3 && managerApproved == true}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <sequenceFlow id="flow6" sourceRef="hrApprove" targetRef="end"/>
+
+    </process>
+
+</definitions>

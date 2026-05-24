@@ -1,0 +1,29 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: activiti-demo
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: "123456"
+    driver-class-name: org.postgresql.Driver
+
+flowable:
+  # 自动部署 processes/ 目录下的 BPMN 文件
+  check-process-definitions: false
+  # 数据库 Schema 自动更新
+  database-schema-update: true
+  # 启用历史数据
+  db-history-used: true
+  # 历史级别: full 记录所有信息
+  history-level: full
+  # 异步执行器
+  async-executor-activate: true
+
+logging:
+  level:
+    com.wbz.activiti: DEBUG
+    org.flowable.engine: DEBUG
