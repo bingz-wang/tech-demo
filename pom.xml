@@ -27,7 +27,7 @@
         <module>springai-alibaba-demo</module>
         <module>other-demo</module>
         <module>spring-security-demo</module>
-        <module>activiti-demo</module>
+        <module>workflow-demo</module>
     </modules>
 
     <!-- 项目属性配置 -->
