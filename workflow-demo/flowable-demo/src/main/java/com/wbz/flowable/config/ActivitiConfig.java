@@ -1,7 +1,6 @@
-package com.wbz.activiti.config;
+package com.wbz.flowable.config;
 
 import org.flowable.engine.RepositoryService;
-import org.flowable.engine.repository.Deployment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

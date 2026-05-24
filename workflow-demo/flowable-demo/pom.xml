@@ -74,7 +74,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <mainClass>com.wbz.activiti.ActivitiDemoApplication</mainClass>
+                    <mainClass>com.wbz.flowable.ActivitiDemoApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

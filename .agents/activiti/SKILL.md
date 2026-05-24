@@ -7,7 +7,7 @@ description: Activiti/Flowable 工作流学习模块 — BPMN 2.0 流程定义�
 
 ## 模块信息
 
-- **包名**: `com.wbz.activiti`
+- **包名**: `com.wbz.flowable`
 - **类型**: Spring Boot Web（端口 **8083**）
 - **启动**: `mvn -pl activiti-demo spring-boot:run`
 - **数据库**: PostgreSQL `localhost:5432/postgres`（`postgres/123456`）

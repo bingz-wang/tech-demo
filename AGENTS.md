@@ -22,7 +22,7 @@
 | `springai-alibaba-demo` | `com.wbz.springaialibaba` | Web (8082) |
 | `other-demo` | `com.wbz` | 控制台 |
 | `spring-security-demo` | `com.wbz` | Web (8080) |
-| `activiti-demo` | `com.wbz.activiti` | Web (8083) |
+| `activiti-demo` | `com.wbz.flowable` | Web (8083) |
 
 ## 快捷命令
 
