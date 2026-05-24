@@ -1,52 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             xmlns:activiti="http://activiti.org/bpmn"
-             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
-             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
-             typeLanguage="http://www.w3.org/2001/XMLSchema"
-             expressionLanguage="http://www.w3.org/1999/XPath"
-             targetNamespace="http://www.activiti.org/processdef">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="leave-process" name="请假流程" isExecutable="true">
+    <!-- 开始事件 -->
+    <startEvent id="sid-f5593cfb-9e3b-4cc3-8410-0968a848bac9"/>
+    <!-- 经理审批：动态分配给传入的 manager 变量 -->
+    <userTask id="sid-e45aed77-ed22-4a98-8a5a-30c02c448f66" name="经理审批" activiti:assignee="${manager}"/>
+    <sequenceFlow id="sid-b17f4741-99fd-4c05-a674-73a8f28c0982" sourceRef="sid-f5593cfb-9e3b-4cc3-8410-0968a848bac9" targetRef="sid-e45aed77-ed22-4a98-8a5a-30c02c448f66"/>
 
-    <process id="leave-process" name="请假流程" isExecutable="true">
+    <!-- 排他网关：根据 approved 变量判断 -->
+    <exclusiveGateway id="sid-gateway-approval" name="审批结果"/>
+    <sequenceFlow id="sid-4bc54f78-b1c2-4c46-8f81-b6f02203d8ca" sourceRef="sid-e45aed77-ed22-4a98-8a5a-30c02c448f66" targetRef="sid-gateway-approval"/>
 
-        <startEvent id="start" name="开始"/>
+    <!-- 通过分支：HR记录归档 -->
+    <serviceTask id="sid-servicetask-record" name="HR记录归档" activiti:expression="${leaveService.recordLeave(execution)}"/>
+    <sequenceFlow id="sid-flow-approved" sourceRef="sid-gateway-approval" targetRef="sid-servicetask-record">
+      <conditionExpression xsi:type="tFormalExpression">${approved}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-flow-record-end" sourceRef="sid-servicetask-record" targetRef="sid-6db73ca2-2d0e-4f5d-b7d7-9ab88509574b"/>
 
-        <userTask id="submit-leave" name="提交请假申请"
-                  activiti:assignee="${employee}"/>
+    <!-- 拒绝分支：通知申请人 -->
+    <serviceTask id="sid-servicetask-notify" name="通知拒绝" activiti:expression="${leaveService.notifyRejection(execution)}"/>
+    <sequenceFlow id="sid-flow-rejected" sourceRef="sid-gateway-approval" targetRef="sid-servicetask-notify">
+      <conditionExpression xsi:type="tFormalExpression">${!approved}</conditionExpression>
+    </sequenceFlow>
+    <endEvent id="sid-end-rejected"/>
+    <sequenceFlow id="sid-flow-notify-end" sourceRef="sid-servicetask-notify" targetRef="sid-end-rejected"/>
 
-        <userTask id="manager-approve" name="经理审批"
-                  activiti:assignee="${manager}"/>
+    <!-- 结束事件 -->
+    <endEvent id="sid-6db73ca2-2d0e-4f5d-b7d7-9ab88509574b"/>
+  </process>
 
-        <exclusiveGateway id="gateway" name="审批结果"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_leave-process">
+    <bpmndi:BPMNPlane bpmnElement="leave-process" id="BPMNPlane_leave-process">
+      <!-- 开始事件 -->
+      <bpmndi:BPMNShape id="shape-ebdc86c1-eab3-4ba9-b7cc-5ff542dde3a6" bpmnElement="sid-f5593cfb-9e3b-4cc3-8410-0968a848bac9">
+        <omgdc:Bounds x="-115.0" y="10.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <!-- 用户任务：经理审批 -->
+      <bpmndi:BPMNShape id="shape-62f42b41-f99f-4d9c-978a-df50b4a5d933" bpmnElement="sid-e45aed77-ed22-4a98-8a5a-30c02c448f66">
+        <omgdc:Bounds x="25.0" y="5.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <!-- 排他网关 -->
+      <bpmndi:BPMNShape id="shape-gateway-approval" bpmnElement="sid-gateway-approval">
+        <omgdc:Bounds x="180.0" y="15.0" width="50.0" height="50.0"/>
+      </bpmndi:BPMNShape>
+      <!-- ServiceTask：HR记录归档 -->
+      <bpmndi:BPMNShape id="shape-servicetask-record" bpmnElement="sid-servicetask-record">
+        <omgdc:Bounds x="300.0" y="-15.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <!-- ServiceTask：通知拒绝 -->
+      <bpmndi:BPMNShape id="shape-servicetask-notify" bpmnElement="sid-servicetask-notify">
+        <omgdc:Bounds x="300.0" y="80.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <!-- 结束事件（通过） -->
+      <bpmndi:BPMNShape id="shape-c14777ff-33b1-43ff-9039-222ba4ddca3e" bpmnElement="sid-6db73ca2-2d0e-4f5d-b7d7-9ab88509574b">
+        <omgdc:Bounds x="450.0" y="10.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <!-- 结束事件（拒绝） -->
+      <bpmndi:BPMNShape id="shape-end-rejected" bpmnElement="sid-end-rejected">
+        <omgdc:Bounds x="450.0" y="105.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
 
-        <serviceTask id="hr-record" name="HR记录"
-                     activiti:expression="${leaveService.recordLeave(execution)}"/>
-
-        <serviceTask id="notify-reject" name="通知拒绝"
-                     activiti:expression="${leaveService.notifyRejection(execution)}"/>
-
-        <endEvent id="end-approved" name="审批通过"/>
-        <endEvent id="end-rejected" name="审批拒绝"/>
-
-        <!-- 流程连线 -->
-        <sequenceFlow id="flow1" sourceRef="start" targetRef="submit-leave"/>
-        <sequenceFlow id="flow2" sourceRef="submit-leave" targetRef="manager-approve"/>
-        <sequenceFlow id="flow3" sourceRef="manager-approve" targetRef="gateway"/>
-
-        <sequenceFlow id="flow-approved" name="通过" sourceRef="gateway" targetRef="hr-record">
-            <conditionExpression xsi:type="tFormalExpression">${approved}</conditionExpression>
-        </sequenceFlow>
-
-        <sequenceFlow id="flow-rejected" name="拒绝" sourceRef="gateway" targetRef="notify-reject">
-            <conditionExpression xsi:type="tFormalExpression">${!approved}</conditionExpression>
-        </sequenceFlow>
-
-        <sequenceFlow id="flow5" sourceRef="hr-record" targetRef="end-approved"/>
-        <sequenceFlow id="flow6" sourceRef="notify-reject" targetRef="end-rejected"/>
-
-    </process>
-
+      <!-- 连线：开始 → 经理审批 -->
+      <bpmndi:BPMNEdge id="edge-bf8804be-d165-43f5-8745-9ee1e6074b08" bpmnElement="sid-b17f4741-99fd-4c05-a674-73a8f28c0982">
+        <omgdi:waypoint x="-85.0" y="25.0"/>
+        <omgdi:waypoint x="25.0" y="25.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- 连线：经理审批 → 网关 -->
+      <bpmndi:BPMNEdge id="edge-ff537f19-5ded-46e5-b141-25995953200d" bpmnElement="sid-4bc54f78-b1c2-4c46-8f81-b6f02203d8ca">
+        <omgdi:waypoint x="125.0" y="45.0"/>
+        <omgdi:waypoint x="180.0" y="40.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- 连线：网关 → 通过 → HR记录 -->
+      <bpmndi:BPMNEdge id="edge-gateway-approved" bpmnElement="sid-flow-approved">
+        <omgdi:waypoint x="205.0" y="30.0"/>
+        <omgdi:waypoint x="300.0" y="25.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- 连线：HR记录 → 结束 -->
+      <bpmndi:BPMNEdge id="edge-record-end" bpmnElement="sid-flow-record-end">
+        <omgdi:waypoint x="400.0" y="25.0"/>
+        <omgdi:waypoint x="450.0" y="25.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- 连线：网关 → 拒绝 → 通知 -->
+      <bpmndi:BPMNEdge id="edge-gateway-rejected" bpmnElement="sid-flow-rejected">
+        <omgdi:waypoint x="205.0" y="55.0"/>
+        <omgdi:waypoint x="300.0" y="120.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- 连线：通知 → 结束 -->
+      <bpmndi:BPMNEdge id="edge-notify-end" bpmnElement="sid-flow-notify-end">
+        <omgdi:waypoint x="400.0" y="120.0"/>
+        <omgdi:waypoint x="450.0" y="120.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
 </definitions>
