@@ -19,6 +19,7 @@
     </properties>
 
     <modules>
+        <module>activiti-demo</module>
         <module>flowable-demo</module>
     </modules>
 

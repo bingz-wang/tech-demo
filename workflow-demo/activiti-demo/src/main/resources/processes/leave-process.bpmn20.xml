@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+
+    <process id="leave-process" name="请假流程" isExecutable="true">
+
+        <startEvent id="start" name="开始"/>
+
+        <userTask id="submit-leave" name="提交请假申请"
+                  activiti:assignee="${employee}"/>
+
+        <userTask id="manager-approve" name="经理审批"
+                  activiti:assignee="${manager}"/>
+
+        <exclusiveGateway id="gateway" name="审批结果"/>
+
+        <serviceTask id="hr-record" name="HR记录"
+                     activiti:expression="${leaveService.recordLeave(execution)}"/>
+
+        <serviceTask id="notify-reject" name="通知拒绝"
+                     activiti:expression="${leaveService.notifyRejection(execution)}"/>
+
+        <endEvent id="end-approved" name="审批通过"/>
+        <endEvent id="end-rejected" name="审批拒绝"/>
+
+        <!-- 流程连线 -->
+        <sequenceFlow id="flow1" sourceRef="start" targetRef="submit-leave"/>
+        <sequenceFlow id="flow2" sourceRef="submit-leave" targetRef="manager-approve"/>
+        <sequenceFlow id="flow3" sourceRef="manager-approve" targetRef="gateway"/>
+
+        <sequenceFlow id="flow-approved" name="通过" sourceRef="gateway" targetRef="hr-record">
+            <conditionExpression xsi:type="tFormalExpression">${approved}</conditionExpression>
+        </sequenceFlow>
+
+        <sequenceFlow id="flow-rejected" name="拒绝" sourceRef="gateway" targetRef="notify-reject">
+            <conditionExpression xsi:type="tFormalExpression">${!approved}</conditionExpression>
+        </sequenceFlow>
+
+        <sequenceFlow id="flow5" sourceRef="hr-record" targetRef="end-approved"/>
+        <sequenceFlow id="flow6" sourceRef="notify-reject" targetRef="end-rejected"/>
+
+    </process>
+
+</definitions>

@@ -28,7 +28,6 @@
         <module>other-demo</module>
         <module>spring-security-demo</module>
         <module>workflow-demo</module>
-        <module>workflow-demo/activiti-demo</module>
     </modules>
 
     <!-- 项目属性配置 -->
